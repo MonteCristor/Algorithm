@@ -39,6 +39,8 @@ public class KruskalCase {
             System.out.println(edge);
         }
 
+        kruskalCase.krushkal();
+
     }
 
     //构造器
@@ -70,7 +72,52 @@ public class KruskalCase {
 
     }
 
-    //打印邻接举证
+    public void krushkal(){
+        int index = 0; //表示最后结果数组的索引
+        int[] ends = new int[edgeNum]; //用于保存"已有最小生成树"中的每个顶点在最小生成树中的终点
+        //创建结果数组 保存最后的最小生成树
+        EData[] rets = new EData[edgeNum];
+
+        //获取图中所有的边的集合 一共有12条边
+        EData[] edges = getEdges();
+//        System.out.println("图的边的集合=" + Arrays.toString(edges) + " 共" + edges.length + "条边");
+
+        //按照边的权值大小进行排序 从小到大
+        sortEdges(edges);
+
+        //遍历数组 edges 将边添加到最小生成树中时 判断是否加入的边是否形成回路 没有加入rets 否则不能加入
+        for (int i = 0; i < edgeNum; i++) {
+            //获取到第i条边的第一个顶点(起点)
+            int p1 = getPosition(edges[i].start);//p1 = 4
+            //获取到第i条边的第二个顶点(终点)
+            int p2 = getPosition(edges[i].end);//p2 = 5
+
+            //获取p1这个顶点在已有最小生成树中的终点
+            int m = getEnd(ends, p1);// m = 4
+            //获取p2这个顶点在已有最小生成树中的终点
+            int n = getEnd(ends, p2);// n = 5
+
+            //是否构成回路
+            if (m != n) {//没有构成回路
+                ends[m] = n;//设置m在"已有最小生成树"中的终点<E,F> [0,0,0,0,5,0,0,0,0,0,0,0]
+                rets[index++] = edges[i];//有一条边加入到rest数组
+            }
+        }
+
+        //统计并打印最小生成树 输出rests
+//        System.out.println("最小生成树=" + Arrays.toString(rets));
+        System.out.println("最小生成树");
+        for (EData ret : rets) {
+            if (ret != null){
+                System.out.println(ret);
+            }
+        }
+
+    }
+
+
+
+    //打印邻接矩阵
     public void print(){
         System.out.println("邻接矩阵为:");
         for (int i = 0; i < vertexs.length; i++) {
